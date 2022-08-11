@@ -11,6 +11,6 @@ import (
 func Run() {
 	port := ":3000"
 
-	fmt.Printf("Listening to port %s", port)
+	fmt.Printf("Listening to port %s\n", port)
 	log.Fatal(http.ListenAndServe(port, routes.Routes()))
 }

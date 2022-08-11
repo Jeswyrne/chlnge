@@ -42,7 +42,7 @@ docker build . -t production-coding-challenge
 2. Run it with your prefer port
 
 ```
-docker run -d -p 3000:3001 production-coding-challenge
+docker run -d -p 3001:3000 production-coding-challenge
 ```
 
 Launch http://localhost:3001
