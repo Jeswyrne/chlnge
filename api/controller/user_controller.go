@@ -30,10 +30,6 @@ func NewUser(cache *cache.Cache) *User {
 
 func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	if r.Method == "OPTIONS" {
 		w.WriteHeader(http.StatusNoContent)
 		response.Error(w,
@@ -56,7 +52,7 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 
 	var userInfoList customPkg.InfoList
 	for _, user := range userList {
-		
+
 		var userInfo models.UserInformation
 		identifier := strings.ToLower(user)
 
