@@ -70,6 +70,11 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 
 			defer resp.Body.Close()
 
+			if resp.StatusCode == 404 ||
+				resp.StatusCode == 403 {
+				continue
+			}
+
 			body, err := io.ReadAll(resp.Body)
 			if err != nil {
 				response.Error(w, http.StatusInternalServerError, err)
@@ -84,7 +89,6 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 
 			u.Cache.Set(identifier, userInfo, time.Duration(2)*time.Minute)
 		}
-
 		userInfoList = append(userInfoList, &userInfo)
 	}
 
