@@ -2,11 +2,7 @@ package user
 
 import "github.com/Jeswyrne/chlnge/api/models"
 
-type Info struct {
-	*models.UserInformation
-}
-
-type InfoList []Info
+type InfoList []*models.UserInformation
 
 func (i InfoList) Len() int {
 	return len(i)

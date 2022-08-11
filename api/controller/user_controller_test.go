@@ -44,7 +44,10 @@ func TestHandler(t *testing.T) {
 
 			res := response.Body.String()
 
-			json.Unmarshal([]byte(res), &data)
+			err := json.Unmarshal([]byte(res), &data)
+			if err != nil {
+				t.Errorf("Error in unmarshaling response")
+			}
 			assert.Equal(t, test.count, len(data))
 		})
 	}

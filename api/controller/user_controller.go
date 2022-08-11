@@ -85,7 +85,7 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 			u.Cache.Set(identifier, userInfo, time.Duration(2)*time.Minute)
 		}
 
-		userInfoList = append(userInfoList, customPkg.Info{&userInfo})
+		userInfoList = append(userInfoList, &userInfo)
 	}
 
 	sort.Sort(userInfoList)
