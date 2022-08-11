@@ -1,10 +1,11 @@
-package user
+package controller
 
 import (
 	"encoding/json"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/Jeswyrne/chlnge/pkg/user"
 	"github.com/patrickmn/go-cache"
 	"github.com/stretchr/testify/assert"
 )
@@ -28,7 +29,7 @@ func TestHandler(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			usr := NewUser(cache.New(cache.DefaultExpiration, cache.DefaultExpiration))
 
-			var data InfoList
+			var data user.InfoList
 			request := httptest.NewRequest(test.method, "/users/info", nil)
 			response := httptest.NewRecorder()
 

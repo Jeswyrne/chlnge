@@ -1,6 +1,6 @@
 package user
 
-import "github.com/Jeswyrne/chlnge/pkg/models"
+import "github.com/Jeswyrne/chlnge/api/models"
 
 type Info struct {
 	*models.UserInformation

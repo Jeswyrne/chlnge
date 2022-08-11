@@ -1,4 +1,4 @@
-package user
+package controller
 
 import (
 	"encoding/json"
@@ -11,11 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Jeswyrne/chlnge/pkg/models"
+	"github.com/Jeswyrne/chlnge/api/models"
+	customPkg "github.com/Jeswyrne/chlnge/pkg/user"
 	"github.com/patrickmn/go-cache"
 )
 
-const GithubApiUrl = "https://api.github.com/usersasdasd/"
+const GithubApiUrl = "https://api.github.com/users/"
 
 type User struct {
 	Cache *cache.Cache
@@ -47,7 +48,7 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var uil InfoList
+	var userInfoList customPkg.InfoList
 	for _, user := range userList {
 		var userInfo models.UserInformation
 		identifier := strings.ToLower(user)
@@ -57,6 +58,7 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 			userInfo = data.(models.UserInformation)
 		} else {
 			name := fmt.Sprintf("%v", user)
+
 			resp, err := http.Get(GithubApiUrl + name)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
@@ -83,11 +85,11 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 			u.Cache.Set(identifier, userInfo, time.Duration(2)*time.Minute)
 		}
 
-		uil = append(uil, Info{&userInfo})
+		userInfoList = append(userInfoList, customPkg.Info{&userInfo})
 	}
 
-	sort.Sort(uil)
+	sort.Sort(userInfoList)
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(uil)
+	json.NewEncoder(w).Encode(userInfoList)
 }
