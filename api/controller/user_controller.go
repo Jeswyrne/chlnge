@@ -5,13 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"sort"
 	"strings"
 	"time"
 
 	"github.com/Jeswyrne/chlnge/api/models"
+	"github.com/Jeswyrne/chlnge/api/response"
 	customPkg "github.com/Jeswyrne/chlnge/pkg/user"
 	"github.com/patrickmn/go-cache"
 )
@@ -43,8 +43,10 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 	userList := strings.Split(users, ",")
 
 	if len(users) == 0 {
-		w.WriteHeader(http.StatusNotFound)
-		log.Println(errors.New("not found"))
+		response.Error(w,
+			http.StatusNotFound,
+			errors.New("not found"),
+		)
 		return
 	}
 
@@ -61,8 +63,7 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 
 			resp, err := http.Get(GithubApiUrl + name)
 			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				log.Fatal(err)
+				response.Error(w, http.StatusInternalServerError, err)
 				return
 			}
 
@@ -70,15 +71,13 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 
 			body, err := io.ReadAll(resp.Body)
 			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				log.Fatal(err)
+				response.Error(w, http.StatusInternalServerError, err)
 				return
 			}
 
 			err = json.Unmarshal(body, &userInfo)
 			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				log.Fatal(err)
+				response.Error(w, http.StatusInternalServerError, err)
 				return
 			}
 
@@ -89,7 +88,5 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sort.Sort(userInfoList)
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(userInfoList)
+	response.ToJSON(w, http.StatusOK, userInfoList)
 }
