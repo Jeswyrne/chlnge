@@ -42,13 +42,14 @@ func TestHandler(t *testing.T) {
 			statusCode := response.Result().StatusCode
 			assert.Equal(t, test.statusCode, statusCode)
 
-			res := response.Body.String()
-
-			err := json.Unmarshal([]byte(res), &data)
-			if err != nil {
-				t.Errorf("Error in unmarshaling response")
+			if statusCode == 200 {
+				res := response.Body.String()
+				err := json.Unmarshal([]byte(res), &data)
+				if err != nil {
+					t.Errorf("Error in unmarshaling response")
+				}
+				assert.Equal(t, test.count, len(data))
 			}
-			assert.Equal(t, test.count, len(data))
 		})
 	}
 }
