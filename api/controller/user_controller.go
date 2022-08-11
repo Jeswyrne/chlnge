@@ -36,6 +36,10 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "OPTIONS" {
 		w.WriteHeader(http.StatusNoContent)
+		response.Error(w,
+			http.StatusNoContent,
+			errors.New("method not allowed"),
+		)
 		return
 	}
 
@@ -52,6 +56,7 @@ func (u *User) Handler(w http.ResponseWriter, r *http.Request) {
 
 	var userInfoList customPkg.InfoList
 	for _, user := range userList {
+		
 		var userInfo models.UserInformation
 		identifier := strings.ToLower(user)
 
